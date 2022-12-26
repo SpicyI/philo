@@ -6,7 +6,7 @@
 /*   By: del-khay <del-khay@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/25 18:20:35 by del-khay          #+#    #+#             */
-/*   Updated: 2022/12/26 21:03:10 by del-khay         ###   ########.fr       */
+/*   Updated: 2022/12/26 23:23:38 by del-khay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,9 +54,44 @@ int set_args(t_philo *v, int ac, char **av)
     
 }
 
+int table_innit(t_philo *v)
+{
+    int i;
+
+    i = 0;
+    v->philos = (int *)malloc(sizeof(int) * v->n_philos);
+    if(!v->n_philos)
+        return (0);
+    v->forks = (int *)malloc(sizeof(int) * v->n_philos);
+    if (!v->forks)
+        return (0);
+    v->th = (pthread_t *)malloc(sizeof(pthread_t) * v->n_philos);
+    if (!v->th)
+        return (0);
+    while(i < v->n_philos)
+    {
+         v->philos[i] = i + 1;
+         v->forks[i] = i + 1;
+         i++;
+    }
+    return (1);
+}
+void *  cycle(t_philo *v)
+{
+
+}
 int philo(t_philo *v)
 {
-       
+    int i;
+
+    i = 0;
+    if (!table_innit(v))
+        return (0);
+    while (i < v->n_philos)
+    (
+        pthread_create(v->th + i, NULL, &cycle, (void *)v);
+        i++;
+    )
 }
 
 int main(int ac, char *av[])

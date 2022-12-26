@@ -14,15 +14,12 @@ OBJ = $(SRC:$(SRCDIR)/%$(EXT)=$(OBJDIR)/%.o)
 
 RM = rm -rf
 DELOBJ = $(OBJ)
-DELNAME = $(NAME)
 
 all: $(NAME)
 
 
-$(NAME): $(OBJ)
-	$(CC) $(CFLAGS) -o $@ $^ $(TH_FLAGS)
-
-
+$(NAME): $(SRC) $(OBJ)
+	$(CC) $(CFLAGS) -o $@ $(SRC) $(TH_FLAGS)
 
 $(OBJDIR)/%.o: $(SRCDIR)/%$(EXT)
 	$(CC) $(CFLAGS) -o $@ -c $<
@@ -32,7 +29,7 @@ $(OBJDIR)/%.o: $(SRCDIR)/%$(EXT)
 clean: 
 	$(RM) $(DELOBJ)
 .PHONY: fclean
-fclean: clean $(DELNAME)
+fclean: clean 
 	$(RM) $(NAME)
 .PHONY: re
 re: fclean all
