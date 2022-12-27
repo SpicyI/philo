@@ -1,7 +1,7 @@
 
 CC = cc
-CFLAGS = -Wall -Werror -Wextra
-TH_FLAGS = -pthread
+CFLAGS = -Wall -Werror -Wextra 
+TH_FLAGS = -pthread 
 
 NAME = philo
 EXT = .c

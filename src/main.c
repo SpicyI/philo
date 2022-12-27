@@ -6,7 +6,7 @@
 /*   By: del-khay <del-khay@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/25 18:20:35 by del-khay          #+#    #+#             */
-/*   Updated: 2022/12/26 23:23:38 by del-khay         ###   ########.fr       */
+/*   Updated: 2022/12/27 21:03:38 by del-khay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int	alldigit(char *s)
 	return (1);
 }
 
-int set_args(t_philo *v, int ac, char **av)
+int set_args(t_data *v, int ac, char **av)
 {
     v->nmax_eat = -1;
     
@@ -54,53 +54,72 @@ int set_args(t_philo *v, int ac, char **av)
     
 }
 
-int table_innit(t_philo *v)
+int table_innit(t_data *v, t_philo **v1, pthread_mutex_t *lock)
 {
     int i;
 
     i = 0;
-    v->philos = (int *)malloc(sizeof(int) * v->n_philos);
-    if(!v->n_philos)
-        return (0);
-    v->forks = (int *)malloc(sizeof(int) * v->n_philos);
-    if (!v->forks)
+    *v1 = (t_philo *)malloc(sizeof(t_philo) * v->n_philos);
+    if(!*v1)
         return (0);
     v->th = (pthread_t *)malloc(sizeof(pthread_t) * v->n_philos);
     if (!v->th)
         return (0);
     while(i < v->n_philos)
     {
-         v->philos[i] = i + 1;
-         v->forks[i] = i + 1;
-         i++;
+        (*v1)[1].lockl = lock; 
+        (*v1)[i].n_philos = v->n_philos;
+        (*v1)[i].tt_die = v->tt_die;
+        (*v1)[i].tt_sleep = v->tt_sleep;
+        (*v1)[i].tt_eat = v->tt_eat;
+        (*v1)[i].nmax_eat = v->nmax_eat;
+        (*v1)[i].philo = i + 1;
+        (*v1)[i].fork = i + 1;
+        i++;
     }
     return (1);
 }
-void *  cycle(t_philo *v)
+void *cycle(t_philo *v)
 {
-
+    
+    
 }
-int philo(t_philo *v)
+
+int philo(t_data *v)
 {
     int i;
-
+    t_philo *v1;
+    pthread_mutex_t lock;
+    
     i = 0;
-    if (!table_innit(v))
+    v1 = 0;
+    pthread_mutex_init(&lock, NULL);
+    if (!table_innit(v, &v1 ,&lock))
         return (0);
-    while (i < v->n_philos)
-    (
-        pthread_create(v->th + i, NULL, &cycle, (void *)v);
+    while(i < v->n_philos)
+    {
+        pthread_create(v->th + i, NULL, &cycle, &v1[i]);
         i++;
-    )
+    }
+    i = 0;
+    while (i < v->n_philos)
+    {
+        pthread_join(*(v->th + i), NULL);
+        i++;
+    }
+    pthread_mutex_destroy(&lock);
+    return(1);
 }
 
 int main(int ac, char *av[])
 {
-    t_philo v;
+    t_data v;
+    
     if (ac > 6 || ac < 5)
         return (1);
     if (!set_args(&v, ac, av))
         return (2);
     if (!philo(&v))
         return (3);
+    return (0);
 }
