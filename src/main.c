@@ -6,7 +6,7 @@
 /*   By: del-khay <del-khay@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/25 18:20:35 by del-khay          #+#    #+#             */
-/*   Updated: 2022/12/27 21:03:38 by del-khay         ###   ########.fr       */
+/*   Updated: 2022/12/28 21:02:40 by del-khay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,50 +54,73 @@ int set_args(t_data *v, int ac, char **av)
     
 }
 
-int table_innit(t_data *v, t_philo **v1, pthread_mutex_t *lock)
+int table_innit(t_data *v, t_philo **v1, pthread_mutex_t **lock)
 {
     int i;
+    int *forks;
 
     i = 0;
+    
+    forks = (int *) malloc(sizeof(int) * v->n_philos);
+    if (!forks)
+        return (0);
     *v1 = (t_philo *)malloc(sizeof(t_philo) * v->n_philos);
     if(!*v1)
+        return (0);
+    *lock = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t) * v->n_philos);
+    if(!*lock)
         return (0);
     v->th = (pthread_t *)malloc(sizeof(pthread_t) * v->n_philos);
     if (!v->th)
         return (0);
     while(i < v->n_philos)
     {
-        (*v1)[1].lockl = lock; 
+        (*v1)[i].lockl = lock[i]; 
         (*v1)[i].n_philos = v->n_philos;
         (*v1)[i].tt_die = v->tt_die;
         (*v1)[i].tt_sleep = v->tt_sleep;
         (*v1)[i].tt_eat = v->tt_eat;
         (*v1)[i].nmax_eat = v->nmax_eat;
         (*v1)[i].philo = i + 1;
-        (*v1)[i].fork = i + 1;
+        (*v1)[i].fork = forks;
+        forks[i] = i + 1;
         i++;
     }
     return (1);
 }
-void *cycle(t_philo *v)
+void *cycle(void *p)
 {
-    
-    
+    t_philo *v;
+
+    v = (t_philo *)p;
+    if (v->philo % 2 == 0)
+    {
+        printf("%d is eating yay\n", v->philo);
+        usleep(v->tt_sleep);
+        printf("%d is thinking\n",v->philo);
+    }
+    else if (v->philo % 2 != 0)
+    {
+        printf("%d is not eating\n",v->philo);
+        usleep(v->tt_sleep);
+        printf("%d is thinking\n",v->philo);
+    }
+    return (&(v->philo));
 }
 
 int philo(t_data *v)
 {
     int i;
     t_philo *v1;
-    pthread_mutex_t lock;
+    pthread_mutex_t *lock;
     
     i = 0;
     v1 = 0;
-    pthread_mutex_init(&lock, NULL);
     if (!table_innit(v, &v1 ,&lock))
         return (0);
     while(i < v->n_philos)
     {
+        pthread_mutex_init(&lock[i], NULL);
         pthread_create(v->th + i, NULL, &cycle, &v1[i]);
         i++;
     }
@@ -105,9 +128,9 @@ int philo(t_data *v)
     while (i < v->n_philos)
     {
         pthread_join(*(v->th + i), NULL);
+        pthread_mutex_destroy(&lock[i]);
         i++;
     }
-    pthread_mutex_destroy(&lock);
     return(1);
 }
 
