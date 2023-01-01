@@ -6,7 +6,7 @@
 /*   By: del-khay <del-khay@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/25 18:20:35 by del-khay          #+#    #+#             */
-/*   Updated: 2022/12/29 20:51:15 by del-khay         ###   ########.fr       */
+/*   Updated: 2023/01/01 23:32:10 by del-khay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,59 +88,45 @@ int table_innit(t_data *v, t_philo **v1, pthread_mutex_t **lock)
     }
     return (1);
 }
+
+int16_t timer(struct timeval *start, struct timeval *end)
+{
+    int total;
+    
+    total =((end->tv_sec - start->tv_sec) * 1000) + ((end->tv_usec - start->tv_usec) / 1000);
+    return(total);
+}
+
 void *cycle(void *p)
 {
     t_philo *v;
-    struct timeval start;
-    struct timeval end;
 
     v = (t_philo *)p;
-    gettimeofday(&start, 0);
-    while((v->nmax_eat)--)
+    int i = 0;
+    gettimeofday(&(v->start), 0);
+    while(1)
     {
-        // if(v->philo % 2 == 0)
-        // {
-            
-            pthread_mutex_lock(&(v->lockl[v->philo - 1]));
+
+            pthread_mutex_lock(&(v->lockl[v->philo]));
             printf("%d has taken thier fork\n",v->philo);
-            if (v->philo == v->n_philos)
-                pthread_mutex_lock(&(v->lockl[0]));
-            else
-                pthread_mutex_lock(&(v->lockl[v->philo]));
+            pthread_mutex_lock(&(v->lockl[(v->philo + 1) % v->n_philos]));
             printf("%d has taken thier right's fork\n",v->philo);
+            gettimeofday(&(v->end), 0);
+            v->visa = timer(&(v->start), &(v->end));
+            if(v->visa > v->tt_die)
+            {
+                printf("%d died cs visa %d > %d\n",v->philo,v->visa,v->tt_die);
+                // return(v);
+            }
+            gettimeofday(&(v->start), 0);
             printf("%d has is eating \n",v->philo);
-            usleep(v->tt_eat);
-            if (v->philo == v->n_philos)
-                pthread_mutex_unlock(&(v->lockl[0]));
-            else
-                pthread_mutex_unlock(&(v->lockl[v->philo]));
-            pthread_mutex_unlock(&(v->lockl[v->philo - 1]));
-            printf("%d has is sleeping \n",v->philo);
-            usleep(v->tt_sleep);
-            printf("%d has is thinking \n",v->philo);
-        // }
-        // else if (v->philo % 2 != 0)
-        // {
-        //     pthread_mutex_lock(&(v->lockl[v->philo - 1]));
-        //     printf("%d has taken thier fork\n",v->philo);
-        //     if (v->philo == v->n_philos)
-        //         pthread_mutex_lock(&(v->lockl[0]));
-        //     else
-        //         pthread_mutex_lock(&(v->lockl[v->philo]));
-        //     printf("%d has taken thier right's fork\n",v->philo);
-        //     printf("%d has is eating \n",v->philo);
-        //     usleep(v->tt_eat);
-        //     if (v->philo == v->n_philos)
-        //         pthread_mutex_unlock(&(v->lockl[0]));
-        //     else
-        //         pthread_mutex_unlock(&(v->lockl[v->philo]));
-        //     pthread_mutex_unlock(&(v->lockl[v->philo - 1]));
-        //     printf("%d has is sleeping \n",v->philo);
-        //     usleep(v->tt_sleep);
-        //     printf("%d has is thinking \n",v->philo);
-        //     usleep(v->tt_die - (v->tt_eat + v->tt_sleep));
-        // }
-        printf("**************************************\n");
+            usleep(v->tt_eat * 1000);
+            pthread_mutex_unlock(&(v->lockl[(v->philo + 1) % v->n_philos]));
+            pthread_mutex_unlock(&(v->lockl[v->philo]));
+            printf("%d is sleeping \n",v->philo);
+            usleep(v->tt_sleep * 1000);
+            printf("%d is thinking \n",v->philo);
+            i++;
     }
     return(p);
 }
@@ -153,18 +139,29 @@ int philo(t_data *v)
     
     i = 0;
     v1 = 0;
+    lock = 0;
     if (!table_innit(v, &v1 ,&lock))
         return (0);
     while(i < v->n_philos)
     {
         pthread_mutex_init(&lock[i], NULL);
-        pthread_create(v->th + i, NULL, &cycle, &v1[i]);
         i++;
     }
-    i = 0;
+                    i = 0;
+                    while(i < v->n_philos)
+                    {
+                        pthread_create(v->th + i, NULL, &cycle, &v1[i]);
+                        i++;
+                    }
+                    i = 0;
+                    while (i < v->n_philos)
+                    {
+                        pthread_join(*(v->th + i), NULL);
+                        i++;
+                    }
+                    i = 0;
     while (i < v->n_philos)
     {
-        pthread_join(*(v->th + i), NULL);
         pthread_mutex_destroy(&lock[i]);
         i++;
     }

@@ -6,7 +6,7 @@
 /*   By: del-khay <del-khay@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/25 18:20:46 by del-khay          #+#    #+#             */
-/*   Updated: 2022/12/29 20:31:44 by del-khay         ###   ########.fr       */
+/*   Updated: 2023/01/01 21:54:46 by del-khay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,9 @@ typedef struct s_philo
 	int	nmax_eat;
 	int philo;
 	int *fork;
+	struct timeval start;
+    struct timeval end;
+    suseconds_t visa;
 }	t_philo;
 
 typedef struct s_dat
