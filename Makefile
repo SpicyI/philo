@@ -18,11 +18,11 @@ DELOBJ = $(OBJ)
 all: $(NAME)
 
 
-$(NAME): $(SRC) $(OBJ)
-	$(CC) $(CFLAGS) -o $@ $(SRC) $(TH_FLAGS)
+$(NAME): $(OBJ)
+	$(CC) $(CFLAGS) -o $@ $(OBJ) $(TH_FLAGS)
 
 $(OBJDIR)/%.o: $(SRCDIR)/%$(EXT)
-	$(CC) $(CFLAGS) -o $@ -c $<
+	$(CC) $(CFLAGS) $(TH_FLAGS) -o $@ -c $<
 
 
 .PHONY: clean
