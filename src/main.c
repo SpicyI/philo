@@ -6,7 +6,7 @@
 /*   By: del-khay <del-khay@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/25 18:20:35 by del-khay          #+#    #+#             */
-/*   Updated: 2023/01/11 01:50:48 by del-khay         ###   ########.fr       */
+/*   Updated: 2023/01/11 23:34:33 by del-khay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void	*cycle(void *p)
 	v = (t_philo *)p;
 	gettimeofday(&(v->start), 0);
 	if (v->philo % 2)
-		usleep(15000);
+		usleep(100);
 	while (v->d->death)
 	{
 		v->d->death = philo_eat(v);
@@ -41,7 +41,7 @@ void	*cycle(void *p)
 			break ;
 		philo_sleep(v);
 		gettimeofday(&(v->ping), NULL);
-		printf("%d: %d is thinking \n", timer(&(v->d->t0), &(v->ping)),
+		printf("%d %d is thinking\n", timer(&(v->d->t0), &(v->ping)),
 			v->philo);
 	}
 	return (p);
@@ -76,15 +76,15 @@ int	philo(t_data *v)
 	return (1);
 }
 
-int	main(int ac, char *av[])
-{
-	t_data	v;
+// int	main(int ac, char *av[])
+// {
+// 	t_data	v;
 
-	if (ac > 6 || ac < 5)
-		return (1);
-	if (!set_args(&v, ac, av))
-		return (2);
-	if (!philo(&v))
-		return (3);
-	return (0);
-}
+// 	if (ac > 6 || ac < 5)
+// 		return (1);
+// 	if (!set_args(&v, ac, av))
+// 		return (2);
+// 	if (!philo(&v))
+// 		return (3);
+// 	return (0);
+// }

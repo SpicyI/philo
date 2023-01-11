@@ -6,7 +6,7 @@
 /*   By: del-khay <del-khay@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/10 12:48:03 by del-khay          #+#    #+#             */
-/*   Updated: 2023/01/10 13:01:47 by del-khay         ###   ########.fr       */
+/*   Updated: 2023/01/11 21:06:44 by del-khay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,19 +77,28 @@ int	set_args(t_data *v, int ac, char **av)
 	v->nmax_eat = -1;
 	v->n_philos = ft_atoi(av[1]);
 	if (v->n_philos <= 0)
+	{
+		// if(v->n_philos == 1)
+		// {
+		// 	usleep(v->tt_die * 1000);
+		// 	printf("")
+		// }
 		return (0);
+	}
 	v->tt_die = ft_atoi(av[2]);
-	if (v->tt_die < 0)
+	if (v->tt_die <= 0)
 		return (0);
 	v->tt_eat = ft_atoi(av[3]);
-	if (v->tt_eat < 0)
+	if (v->tt_eat <= 0)
 		return (0);
 	v->tt_sleep = ft_atoi(av[4]);
-	if (v->tt_sleep < 0)
+	if (v->tt_sleep <= 0)
 		return (0);
 	if (ac == 6)
+	{
 		v->nmax_eat = ft_atoi(av[5]);
-	if (v->nmax_eat <= 0 && ac == 6)
-		return (0);
+		if (v->nmax_eat <= 0)
+			return (0);
+	}
 	return (1);
 }

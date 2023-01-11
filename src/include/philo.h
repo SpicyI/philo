@@ -6,7 +6,7 @@
 /*   By: del-khay <del-khay@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/25 18:20:46 by del-khay          #+#    #+#             */
-/*   Updated: 2023/01/11 01:46:28 by del-khay         ###   ########.fr       */
+/*   Updated: 2023/01/11 23:10:29 by del-khay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ struct	s_data;
 
 typedef struct s_philo
 {
-	pthread_mutex_t	*lockl;
+	pthread_mutex_t	*fork;
 	struct s_data	*d;
 	int				philo;
 	int				n_eat;

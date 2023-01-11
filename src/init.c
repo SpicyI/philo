@@ -6,7 +6,7 @@
 /*   By: del-khay <del-khay@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/10 14:34:34 by del-khay          #+#    #+#             */
-/*   Updated: 2023/01/11 01:38:10 by del-khay         ###   ########.fr       */
+/*   Updated: 2023/01/11 20:40:55 by del-khay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int	table_init(t_data *v, t_philo **v1, pthread_mutex_t **lock)
 	memset(v->th, 0, v->n_philos * sizeof(pthread_t));
 	while (i < v->n_philos)
 	{
-		(*v1)[i].lockl = *lock;
+		(*v1)[i].fork = *lock;
 		(*v1)[i].d = v;
 		(*v1)[i].n_eat = 0;
 		(*v1)[i].philo = i + 1;
@@ -48,7 +48,8 @@ int	m_lock(pthread_mutex_t *lock, t_data *v)
 	i = 0;
 	while (i < v->n_philos)
 	{
-		pthread_mutex_init(&lock[i], NULL);
+		if(pthread_mutex_init(&lock[i], NULL) == -1)
+			return (0);
 		i++;
 	}
 	return (1);
@@ -61,7 +62,8 @@ int	m_unlock(pthread_mutex_t *lock, t_data *v)
 	i = 0;
 	while (i < v->n_philos)
 	{
-		pthread_mutex_destroy(&lock[i]);
+		if(pthread_mutex_destroy(&lock[i]) == -1)
+			return (0);
 		i++;
 	}
 	return (1);

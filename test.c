@@ -1,9 +1,10 @@
-// #include <stdio.h>
-// #include <stdlib.h>
-// #include <pthread.h>
-// #include <string.h>
-// #include <unistd.h>
-// #include <sys/time.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <pthread.h>
+#include <string.h>
+#include <unistd.h>
+ #include <sys/time.h>
+#include "src/include/philo.h"
 
 // static pthread_t th[5];
 
@@ -47,24 +48,34 @@
 //   exit (0);
 // }
 
-#include <stdio.h>
+// #include <stdio.h>
+// #include <errno.h>
+// int main(void)
+// {
+  
+//   printf("-----%d\n",usleep(1000020));
+// }
 
-int main(void)
-{
-  int i = 1;
 
-  while (i <= 5)
-  {
-    printf("%d take %d and %d\n",i,i % 5,(i + 1) % 5);
-    i++;
-  }
+// while ()
+
+// usleep(1000);
+
+// expected gettime() + 1000
+
+// gettime() ==  
+
+
+int main(void){
+    struct timeval  s;
+    struct timeval  e;
+
+    gettimeofday(&s,NULL);
+    usleep(200*998);
+    gettimeofday(&e,NULL);
+    printf("======%d\n",timer(&s,&e));
+    return 0;
 }
-
-
-
-
-
-
 
 
 
