@@ -6,7 +6,7 @@
 /*   By: del-khay <del-khay@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/10 14:34:34 by del-khay          #+#    #+#             */
-/*   Updated: 2023/01/10 15:01:23 by del-khay         ###   ########.fr       */
+/*   Updated: 2023/01/11 01:38:10 by del-khay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,9 +32,12 @@ int	table_init(t_data *v, t_philo **v1, pthread_mutex_t **lock)
 	{
 		(*v1)[i].lockl = *lock;
 		(*v1)[i].d = v;
+		(*v1)[i].n_eat = 0;
 		(*v1)[i].philo = i + 1;
 		i++;
 	}
+	v->death = 1;
+	v->philos_in_table = v->n_philos;
 	return (1);
 }
 
