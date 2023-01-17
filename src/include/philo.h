@@ -6,7 +6,7 @@
 /*   By: del-khay <del-khay@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/25 18:20:46 by del-khay          #+#    #+#             */
-/*   Updated: 2023/01/11 23:10:29 by del-khay         ###   ########.fr       */
+/*   Updated: 2023/01/17 16:31:44 by del-khay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
 # include <unistd.h>
 
 /*------------structs---------------*/
-struct	s_data;
+struct s_data;
 
 typedef struct s_philo
 {
@@ -59,6 +59,9 @@ int					m_lock(pthread_mutex_t *lock, t_data *v);
 int					table_init(t_data *v, t_philo **v1, pthread_mutex_t **lock);
 /*-------------cycle-----------*/
 int					philo_eat(t_philo *v);
-int					timer(struct timeval *start, struct timeval *end);
+int					timer(struct timeval start, struct timeval end);
 int					philo_sleep(t_philo *v);
+void				ft_sleep(int time_to_sleep);
+int					us_timer(struct timeval start, struct timeval end);
+
 #endif
