@@ -6,7 +6,7 @@
 /*   By: del-khay <del-khay@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/10 23:03:21 by del-khay          #+#    #+#             */
-/*   Updated: 2023/01/17 17:00:30 by del-khay         ###   ########.fr       */
+/*   Updated: 2023/01/20 23:48:03 by del-khay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,29 +14,20 @@
 
 int	philo_eat(t_philo *v)
 {
-	pthread_mutex_lock(&(v->fork[(v->philo - 1) % v->d->n_philos]));
+	pthread_mutex_lock(&(v->fork[(v->philo - 1)]));
 	gettimeofday(&(v->ping), NULL);
-	printf("%d %d has taken a fork\n", timer(v->d->t0, v->ping),
-		v->philo);
+	printf("%d %d has taken a fork\n", timer(v->d->t0, v->ping), v->philo);
 	pthread_mutex_lock(&(v->fork[v->philo % v->d->n_philos]));
 	gettimeofday(&(v->ping), NULL);
-	printf("%d %d has taken a fork\n", timer(v->d->t0, v->ping),
-		v->philo);
-	gettimeofday(&(v->end), 0);
-	if (timer(v->start, v->end) > (v->d->tt_die))
-	{
-		gettimeofday(&(v->ping), NULL);
-		printf("%d %d died\n", timer(v->d->t0, v->ping), v->philo);
-		return (0);
-	}
+	printf("%d %d has taken a fork\n", timer(v->d->t0, v->ping), v->philo);
+	pthread_mutex_lock(&v->d->death_lock);
 	gettimeofday(&(v->start), 0);
 	gettimeofday(&(v->ping), NULL);
-	if (v->d->nmax_eat > 0)
-		v->n_eat += 1;
 	printf("%d %d is eating\n", timer(v->d->t0, v->ping), v->philo);
+	pthread_mutex_unlock(&v->d->death_lock);
 	ft_sleep(v->d->tt_eat * 1000);
 	pthread_mutex_unlock(&(v->fork[v->philo % v->d->n_philos]));
-	pthread_mutex_unlock(&(v->fork[(v->philo - 1) % v->d->n_philos]));
+	pthread_mutex_unlock(&(v->fork[(v->philo - 1)]));
 	return (1);
 }
 
@@ -57,18 +48,17 @@ int	us_timer(struct timeval start, struct timeval end)
 	return (total);
 }
 
-void ft_sleep(int time_to_sleep)
+void	ft_sleep(int time_to_sleep)
 {
 	struct timeval	p0;
 	struct timeval	p1;
 
 	gettimeofday(&p0, 0);
-	usleep(time_to_sleep / 2);
 	while (1)
 	{
-		gettimeofday(&p1,0);
+		gettimeofday(&p1, 0);
 		if (us_timer(p0, p1) >= time_to_sleep)
-			break;
+			break ;
+		usleep(4 * 2);
 	}
-	
 }

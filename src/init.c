@@ -6,7 +6,7 @@
 /*   By: del-khay <del-khay@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/10 14:34:34 by del-khay          #+#    #+#             */
-/*   Updated: 2023/01/11 20:40:55 by del-khay         ###   ########.fr       */
+/*   Updated: 2023/01/20 21:00:14 by del-khay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,10 +48,12 @@ int	m_lock(pthread_mutex_t *lock, t_data *v)
 	i = 0;
 	while (i < v->n_philos)
 	{
-		if(pthread_mutex_init(&lock[i], NULL) == -1)
+		if (pthread_mutex_init(&lock[i], NULL) == -1)
 			return (0);
 		i++;
 	}
+	pthread_mutex_init(&v->death_lock, NULL);
+	pthread_mutex_init(&v->neat_lock, NULL);
 	return (1);
 }
 
@@ -62,8 +64,28 @@ int	m_unlock(pthread_mutex_t *lock, t_data *v)
 	i = 0;
 	while (i < v->n_philos)
 	{
-		if(pthread_mutex_destroy(&lock[i]) == -1)
+		if (pthread_mutex_destroy(&lock[i]) == -1)
 			return (0);
+		i++;
+	}
+	pthread_mutex_destroy(&v->death_lock);
+	pthread_mutex_destroy(&v->neat_lock);
+	return (1);
+}
+
+int check_neat(t_philo *v1, t_data *v)
+{
+	int	i;
+
+	i = 0;
+	while (i < v->n_philos)
+	{
+		pthread_mutex_lock(&v->neat_lock);
+		if (v1[i].n_eat < v->nmax_eat){
+			pthread_mutex_unlock(&v->neat_lock);
+			return (0);
+		}
+		pthread_mutex_unlock(&v->neat_lock);
 		i++;
 	}
 	return (1);

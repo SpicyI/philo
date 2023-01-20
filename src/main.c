@@ -6,7 +6,7 @@
 /*   By: del-khay <del-khay@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/25 18:20:35 by del-khay          #+#    #+#             */
-/*   Updated: 2023/01/17 16:52:59 by del-khay         ###   ########.fr       */
+/*   Updated: 2023/01/21 00:16:13 by del-khay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,23 +28,53 @@ void	*cycle(void *p)
 	v = (t_philo *)p;
 	gettimeofday(&(v->start), 0);
 	if ((v->philo % 2))
-		usleep(150);
-	while (v->d->death)
+		usleep(1500);
+	while (v->d->death && v->d->philos_in_table)
 	{
-		v->d->death = philo_eat(v);
-		if (v->n_eat == v->d->nmax_eat)
+		philo_eat(v);
+		if (v->d->nmax_eat > 0)
+			v->n_eat++;
+		if (v->d->nmax_eat > 0 && v->n_eat == v->d->nmax_eat)
 		{
-			v->d->philos_in_table -= 1;
-			break ;
+			pthread_mutex_lock(&v->d->neat_lock);
+			v->d->philos_in_table--;
+			pthread_mutex_unlock(&v->d->neat_lock);
+			return (0);
 		}
-		if (v->d->death == 0)
-			break ;
 		philo_sleep(v);
 		gettimeofday(&(v->ping), NULL);
-		printf("%d %d is thinking\n", timer(v->d->t0, v->ping),
-			v->philo);
+		printf("%d %d is thinking\n", timer(v->d->t0, v->ping), v->philo);
 	}
-	return (p);
+	return (0);
+}
+
+void	check_death(t_philo *v1, t_data *v)
+{
+	int				i;
+	struct timeval	ping;
+
+	while (v->death)
+	{
+		i = 0;
+		while (i < v->n_philos)
+		{
+			gettimeofday(&v->end, 0);
+			pthread_mutex_lock(&v->death_lock);
+			if (v->philos_in_table == 0)
+				return;
+			if (timer(v1[i].start, v->end) > v->tt_die)
+			{
+				v->death = 0;
+				gettimeofday(&ping, NULL);
+				printf("%d %d died\n", timer(v->t0, ping), v1[i].philo);
+				return ;
+			}
+			pthread_mutex_unlock(&v->death_lock);
+			if(v->death == 0)
+				return ;
+			i++;
+		}
+	}
 }
 
 int	philo(t_data *v)
@@ -66,11 +96,7 @@ int	philo(t_data *v)
 		pthread_create(v->th + i, NULL, &cycle, &v1[i]);
 		pthread_detach(v->th[i++]);
 	}
-	while (v->death)
-	{
-		if (v->philos_in_table == 0)
-			break ;
-	}
+	check_death(v1, v);
 	if (!m_unlock(lock, v))
 		return (0);
 	return (1);
