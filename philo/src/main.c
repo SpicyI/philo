@@ -6,7 +6,7 @@
 /*   By: del-khay <del-khay@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/25 18:20:35 by del-khay          #+#    #+#             */
-/*   Updated: 2023/01/21 00:16:13 by del-khay         ###   ########.fr       */
+/*   Updated: 2023/01/23 23:25:57 by del-khay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,8 @@ void	*cycle(void *p)
 		}
 		philo_sleep(v);
 		gettimeofday(&(v->ping), NULL);
-		printf("%d %d is thinking\n", timer(v->d->t0, v->ping), v->philo);
+		printf("%5d %d is thinking\n", timer(v->d->t0, v->ping), v->philo);
+		usleep(50);
 	}
 	return (0);
 }
@@ -55,24 +56,24 @@ void	check_death(t_philo *v1, t_data *v)
 
 	while (v->death)
 	{
-		i = 0;
-		while (i < v->n_philos)
+		i = -1;
+		while (++i < v->n_philos)
 		{
 			gettimeofday(&v->end, 0);
 			pthread_mutex_lock(&v->death_lock);
 			if (v->philos_in_table == 0)
-				return;
+				return ;
 			if (timer(v1[i].start, v->end) > v->tt_die)
 			{
 				v->death = 0;
 				gettimeofday(&ping, NULL);
-				printf("%d %d died\n", timer(v->t0, ping), v1[i].philo);
+				printf("%5d %d died\n", timer(v->t0, ping), v1[i].philo);
 				return ;
 			}
 			pthread_mutex_unlock(&v->death_lock);
-			if(v->death == 0)
+			if (v->death == 0)
 				return ;
-			i++;
+			usleep(30);
 		}
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: del-khay <del-khay@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/10 14:34:34 by del-khay          #+#    #+#             */
-/*   Updated: 2023/01/20 21:00:14 by del-khay         ###   ########.fr       */
+/*   Updated: 2023/01/23 21:42:07 by del-khay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,23 +70,5 @@ int	m_unlock(pthread_mutex_t *lock, t_data *v)
 	}
 	pthread_mutex_destroy(&v->death_lock);
 	pthread_mutex_destroy(&v->neat_lock);
-	return (1);
-}
-
-int check_neat(t_philo *v1, t_data *v)
-{
-	int	i;
-
-	i = 0;
-	while (i < v->n_philos)
-	{
-		pthread_mutex_lock(&v->neat_lock);
-		if (v1[i].n_eat < v->nmax_eat){
-			pthread_mutex_unlock(&v->neat_lock);
-			return (0);
-		}
-		pthread_mutex_unlock(&v->neat_lock);
-		i++;
-	}
 	return (1);
 }

@@ -6,7 +6,7 @@
 /*   By: del-khay <del-khay@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/10 23:03:21 by del-khay          #+#    #+#             */
-/*   Updated: 2023/01/20 23:48:03 by del-khay         ###   ########.fr       */
+/*   Updated: 2023/01/23 23:26:09 by del-khay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,27 +14,24 @@
 
 int	philo_eat(t_philo *v)
 {
-	pthread_mutex_lock(&(v->fork[(v->philo - 1)]));
+	sem_wait(v->d->forks);
 	gettimeofday(&(v->ping), NULL);
-	printf("%d %d has taken a fork\n", timer(v->d->t0, v->ping), v->philo);
-	pthread_mutex_lock(&(v->fork[v->philo % v->d->n_philos]));
+	printf("%5d %d has taken a fork\n", timer(v->d->t0, v->ping), v->philo);
+	sem_wait(v->d->forks);
+	gettimeofday(&v->start, NULL);
 	gettimeofday(&(v->ping), NULL);
-	printf("%d %d has taken a fork\n", timer(v->d->t0, v->ping), v->philo);
-	pthread_mutex_lock(&v->d->death_lock);
-	gettimeofday(&(v->start), 0);
-	gettimeofday(&(v->ping), NULL);
-	printf("%d %d is eating\n", timer(v->d->t0, v->ping), v->philo);
-	pthread_mutex_unlock(&v->d->death_lock);
+	printf("%5d %d has taken a fork\n", timer(v->d->t0, v->ping), v->philo);
+	printf("%5d %d is eating\n", timer(v->d->t0, v->ping), v->philo);
 	ft_sleep(v->d->tt_eat * 1000);
-	pthread_mutex_unlock(&(v->fork[v->philo % v->d->n_philos]));
-	pthread_mutex_unlock(&(v->fork[(v->philo - 1)]));
+	sem_post(v->d->forks);
+	sem_post(v->d->forks);
 	return (1);
 }
 
 int	philo_sleep(t_philo *v)
 {
 	gettimeofday(&(v->ping), NULL);
-	printf("%d %d is sleeping\n", timer(v->d->t0, v->ping), v->philo);
+	printf("%5d %d is sleeping\n", timer(v->d->t0, v->ping), v->philo);
 	ft_sleep(v->d->tt_sleep * 1000);
 	return (1);
 }
@@ -59,6 +56,6 @@ void	ft_sleep(int time_to_sleep)
 		gettimeofday(&p1, 0);
 		if (us_timer(p0, p1) >= time_to_sleep)
 			break ;
-		usleep(4 * 2);
+		usleep(300);
 	}
 }
