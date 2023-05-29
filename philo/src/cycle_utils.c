@@ -36,6 +36,8 @@ int	philo_sleep(t_philo *v)
 	gettimeofday(&(v->ping), NULL);
 	printf("%5d %d is sleeping\n", timer(v->d->t0, v->ping), v->philo);
 	ft_sleep(v->d->tt_sleep * 1000);
+	gettimeofday(&(v->ping), NULL);
+	printf("%5d %d is thinking\n", timer(v->d->t0, v->ping), v->philo);
 	return (1);
 }
 

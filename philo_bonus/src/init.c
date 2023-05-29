@@ -6,7 +6,7 @@
 /*   By: del-khay <del-khay@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/10 14:34:34 by del-khay          #+#    #+#             */
-/*   Updated: 2023/01/23 23:28:56 by del-khay         ###   ########.fr       */
+/*   Updated: 2023/01/24 17:18:01 by del-khay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,6 @@ void	ft_exit(t_data *v)
 	int	i;
 	int	status;
 
-	i = 0;
 	while (1)
 	{
 		waitpid(-1, &status, 0);
@@ -57,12 +56,14 @@ void	ft_exit(t_data *v)
 			i = 0;
 			status = WEXITSTATUS(status);
 			gettimeofday(&v->end, NULL);
-			printf("%5d %d died\n", timer(v->t0, v->end), status);
+			if (status <= v->n_philos)
+				printf("%5d %d died\n", timer(v->t0, v->end), status);
+			else
+				while (i < v->n_philos)
+					waitpid(v->pid[i++], NULL, 0);
+			i = 0;
 			while (i < v->n_philos)
-			{
-				kill(v->pid[i], SIGKILL);
-				i++;
-			}
+				kill(v->pid[i++], SIGKILL);
 			sem_close(v->forks);
 			sem_unlink(FORKS);
 			exit(0);

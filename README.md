@@ -1,6 +1,6 @@
 # Philosophers
 <p align="center">
-  <img src="https://cdn.openart.ai/stable_diffusion/b88ae351d7de582001bb5e5cf98e5e1b115cc617_2000x2000.webp" alt="Dining philosophers">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/b/b4/Un_d%C3%AEner_de_philosophes.Jean_Huber.jpg" alt="Dining philosophers">
 </p>
 
 ---

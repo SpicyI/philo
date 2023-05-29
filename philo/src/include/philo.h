@@ -66,5 +66,6 @@ int					philo_sleep(t_philo *v);
 void				ft_sleep(int time_to_sleep);
 int					us_timer(struct timeval start, struct timeval end);
 int					check_neat(t_philo *v1, t_data *v);
+int					exit_condition(t_philo *v);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: del-khay <del-khay@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/25 18:20:35 by del-khay          #+#    #+#             */
-/*   Updated: 2023/01/23 23:25:57 by del-khay         ###   ########.fr       */
+/*   Updated: 2023/05/29 17:09:51 by del-khay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,10 @@ void	*cycle(void *p)
 	gettimeofday(&(v->start), 0);
 	if ((v->philo % 2))
 		usleep(1500);
-	while (v->d->death && v->d->philos_in_table)
+	while (v->d->death)
 	{
+		if (exit_condition(v))
+			return (0);
 		philo_eat(v);
 		if (v->d->nmax_eat > 0)
 			v->n_eat++;
@@ -42,8 +44,6 @@ void	*cycle(void *p)
 			return (0);
 		}
 		philo_sleep(v);
-		gettimeofday(&(v->ping), NULL);
-		printf("%5d %d is thinking\n", timer(v->d->t0, v->ping), v->philo);
 		usleep(50);
 	}
 	return (0);
@@ -61,8 +61,10 @@ void	check_death(t_philo *v1, t_data *v)
 		{
 			gettimeofday(&v->end, 0);
 			pthread_mutex_lock(&v->death_lock);
+			pthread_mutex_lock(&v->neat_lock);
 			if (v->philos_in_table == 0)
 				return ;
+			pthread_mutex_unlock(&v->neat_lock);
 			if (timer(v1[i].start, v->end) > v->tt_die)
 			{
 				v->death = 0;

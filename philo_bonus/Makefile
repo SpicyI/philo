@@ -1,12 +1,14 @@
 
 CC = cc
-CFLAGS =  -Wall -Werror -Wextra
+CFLAGS =  -Wall -Werror -Wextra 
 TH_FLAGS = -pthread 
 
 NAME = philo_bonus
 EXT = .c
 SRCDIR = src
 OBJDIR = obj
+ONJ_file = obj
+OBJ_DIR= mkdir -p obj
 
 
 SRC = $(wildcard $(SRCDIR)/*$(EXT))
@@ -22,6 +24,7 @@ $(NAME): $(OBJ)
 	$(CC) $(CFLAGS) -o $@ $(OBJ) $(TH_FLAGS)
 
 $(OBJDIR)/%.o: $(SRCDIR)/%$(EXT)
+	$(OBJ_DIR)
 	$(CC) $(CFLAGS) $(TH_FLAGS) -o $@ -c $<
 
 

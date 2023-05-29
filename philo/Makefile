@@ -1,13 +1,13 @@
 
 CC = cc
-CFLAGS =  -Wall -Werror -Wextra 
+CFLAGS =  -Wall -Werror -Wextra
 TH_FLAGS = -pthread 
 
 NAME = philo
 EXT = .c
 SRCDIR = src
 OBJDIR = obj
-
+OBJ_DIR= mkdir -p obj
 
 SRC = $(wildcard $(SRCDIR)/*$(EXT))
 OBJ = $(SRC:$(SRCDIR)/%$(EXT)=$(OBJDIR)/%.o)
@@ -22,6 +22,7 @@ $(NAME): $(OBJ)
 	$(CC) $(CFLAGS) -o $@ $(OBJ) $(TH_FLAGS)
 
 $(OBJDIR)/%.o: $(SRCDIR)/%$(EXT)
+	$(OBJ_DIR)
 	$(CC) $(CFLAGS) $(TH_FLAGS) -o $@ -c $<
 
 

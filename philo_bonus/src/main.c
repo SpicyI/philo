@@ -6,7 +6,7 @@
 /*   By: del-khay <del-khay@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/25 18:20:35 by del-khay          #+#    #+#             */
-/*   Updated: 2023/01/23 23:12:37 by del-khay         ###   ########.fr       */
+/*   Updated: 2023/01/24 16:47:46 by del-khay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void	*cycle(void *p)
 		{
 			v->n_eat++;
 			if (v->n_eat == v->d->nmax_eat)
-				exit(1);
+				exit(v->d->n_philos + 2);
 		}
 		philo_sleep(v);
 		gettimeofday(&(v->ping), NULL);

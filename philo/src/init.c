@@ -72,3 +72,15 @@ int	m_unlock(pthread_mutex_t *lock, t_data *v)
 	pthread_mutex_destroy(&v->neat_lock);
 	return (1);
 }
+
+int	exit_condition(t_philo *v)
+{
+	pthread_mutex_lock(&v->d->neat_lock);
+	if (v->d->philos_in_table <= 0)
+	{
+		pthread_mutex_unlock(&v->d->neat_lock);
+		return (1);
+	}
+	pthread_mutex_unlock(&v->d->neat_lock);
+	return (0);
+}
