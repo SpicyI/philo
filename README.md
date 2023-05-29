@@ -1,6 +1,12 @@
 # Philosophers
-![Dining philosophers](https://cdn.openart.ai/stable_diffusion/b88ae351d7de582001bb5e5cf98e5e1b115cc617_2000x2000.webp)
+<p align="center">
+  <img src="https://cdn.openart.ai/stable_diffusion/b88ae351d7de582001bb5e5cf98e5e1b115cc617_2000x2000.webp" alt="Dining philosophers">
+</p>
+
+---
+
 The philosopher's problem is a classic synchronization problem in computer science that highlights challenges in resource allocation and deadlock prevention. Imagine a group of philosophers seated around a circular table, with a bowl of spaghetti placed between each pair of adjacent philosophers. Each philosopher alternates between thinking and eating, using a single fork to eat the spaghetti. However, to eat, a philosopher must have both forks. The problem arises when each philosopher grabs the fork to their left, resulting in a deadlock, as no philosopher can proceed without acquiring the fork to their right. Various strategies, such as using semaphore-based solutions or introducing a dining protocol, can be employed to ensure fair resource allocation and prevent deadlock in this scenario.
+
 
 ## Table of Contents
 
