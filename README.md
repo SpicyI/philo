@@ -1,15 +1,13 @@
 # Philosophers
-
+![Dining philosophers](https://cdn.openart.ai/stable_diffusion/b88ae351d7de582001bb5e5cf98e5e1b115cc617_2000x2000.webp)
 The philosopher's problem is a classic synchronization problem in computer science that highlights challenges in resource allocation and deadlock prevention. Imagine a group of philosophers seated around a circular table, with a bowl of spaghetti placed between each pair of adjacent philosophers. Each philosopher alternates between thinking and eating, using a single fork to eat the spaghetti. However, to eat, a philosopher must have both forks. The problem arises when each philosopher grabs the fork to their left, resulting in a deadlock, as no philosopher can proceed without acquiring the fork to their right. Various strategies, such as using semaphore-based solutions or introducing a dining protocol, can be employed to ensure fair resource allocation and prevent deadlock in this scenario.
 
 ## Table of Contents
 
-- [Semaphore Solution](#Semaphore Solution)
-- [Mutex Solution](#Mutex Solution)
-- [Difference between Semaphore and Mutex](#Difference between Semaphore and Mutex)
+- [Semaphore-Solution](#Semaphore-Solution)
+- [Mutex-Solution](#Mutex-Solution)
+- [Difference-between-Semaphore-and-Mutex](#Difference-between-Semaphore-and-Mutex)
 - [Usage](#usage)
-- [Contributing](#contributing)
-- [License](#license)
 
 ## Semaphore Solution:
 In the context of synchronization, a semaphore is a variable used to control access to a shared resource. Semaphores can have a certain number of permits associated with them, and these permits act as tokens that determine how many threads can access the resource concurrently. The two main operations associated with semaphores are "wait" (decrementing the count of permits) and "post" (incrementing the count of permits). 
